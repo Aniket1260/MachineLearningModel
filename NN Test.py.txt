@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import torch
+import torch.nn as nn
+
+
+# In[ ]:
+
+
+x = ['age','sex[0-1]','cp[0-3]','trestbps','chol','fbs[0-1]','restecg[0-2]','thalach'     ,'exang[0-1]','oldpeak','slope[0-2]','ca[0-4]','thal[0-2]']
+inp = []
+for item in x:
+    inp.append(int(input(f"Enter The {item}:- ")))
+
+
+# In[ ]:
+
+
+class Net(nn.Module):
+    def __init__(self, input_size, hidden_size, out_classes):
+        super(Net, self).__init__()
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_size, hidden_size)
+        self.fc3 = nn.Linear(hidden_size, out_classes)
+        
+    def forward(self, x):
+        out = self.fc1(x)
+        out = self.relu(out)
+        out = self.fc2(out)
+        out = self.fc3(out)
+        return out
+
+
+# In[ ]:
+
+
+net = torch.load('model.pt')
+net.eval()
+
+
+# In[ ]:
+
+
+with torch.no_grad():
+    inp = torch.tensor(inp, dtype=torch.float32)
+    outputs = net(inp)
+    predicted = torch.argmax(outputs).item()
+    print(predicted)
+
+
+# In[ ]:
+
+
+
+
